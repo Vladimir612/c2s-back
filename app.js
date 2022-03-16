@@ -15,7 +15,8 @@ app.get("/", (_, res) => {
   res.send("C2S");
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; 
 
 app.listen(PORT, () => console.log("Server started"));
 mongoose.connect(process.env.DB_CONNECTION, () => console.log("connected"));
+
