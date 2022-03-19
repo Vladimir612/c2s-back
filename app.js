@@ -1,22 +1,32 @@
 //Import packages
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-require("dotenv/config");
+const express = require('express')
+const mongoose = require('mongoose')
+const cors = require('cors')
+require('express-async-errors')
+require('dotenv/config')
 
-const app = express();
+//routers
+const prijaveRouter = require('./routes/prijave')
+const loginRouter = require('./routes/auth')
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+//middleware
+const errorHandler = require('./middleware/errorhandler')
 
-app.use(cors());
+const app = express()
 
-app.get("/", (_, res) => {
-  res.send("C2S");
-});
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cors())
 
-const PORT = process.env.PORT || 5000; 
+app.use('/api/auth', loginRouter)
+app.use('/api/prijave', prijaveRouter)
+app.get('/', (req, res) => {
+  res.send('C2S')
+})
 
-app.listen(PORT, () => console.log("Server started"));
-mongoose.connect(process.env.DB_CONNECTION, () => console.log("connected"));
+app.use(errorHandler)
 
+const PORT = process.env.PORT || 5000
+
+app.listen(PORT, () => console.log('Server started'))
+mongoose.connect(process.env.DB_CONNECTION, () => console.log('connected'))
