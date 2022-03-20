@@ -73,17 +73,24 @@ const prijavaShema = new mongoose.Schema({
   },
   infoZaLogistiku: {
     type: {
-      radionica: {
-        type: String,
-      },
       panel: {
         type: Boolean,
+      },
+      techChallenge: {
+        type: Boolean,
+      },
+      speedDating: {
+        type: String,
+      },
+      radionica: {
+        type: String,
       },
     },
   },
   izmeniliLog: [
     {
-      type: String,
+      type: mongoose.Types.ObjectId,
+      ref: 'admins',
     },
     /* {
       type: {
@@ -95,7 +102,8 @@ const prijavaShema = new mongoose.Schema({
   ],
   izmeniliHr: [
     {
-      type: String,
+      type: mongoose.Types.ObjectId,
+      ref: 'admins',
     },
   ],
   napomena: {
