@@ -1,13 +1,13 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 const prijavaShema = new mongoose.Schema({
   imePrezime: {
     type: String,
-    required: [true, 'Morate uneti ime i prezime'],
+    required: [true, "Morate uneti ime i prezime"],
     unique: true,
   },
   emailPriv: {
     type: String,
-    required: [true, 'Morate uneti pravi email'],
+    required: [true, "Morate uneti pravi email"],
     unique: true,
   },
   emailFon: {
@@ -35,7 +35,7 @@ const prijavaShema = new mongoose.Schema({
         type: String,
       },
     },
-    required: [true, 'Zelje su obavezno polje'],
+    required: [true, "Zelje su obavezno polje"],
   },
   pitanja: [
     {
@@ -59,13 +59,13 @@ const prijavaShema = new mongoose.Schema({
   ],
   statusHR: {
     type: String,
-    enum: ['neocenjen', 'ocenjen', 'finalno'],
-    default: 'neocenjen',
+    enum: ["neocenjen", "ocenjen", "finalno"],
+    default: "neocenjen",
   },
   statusLogistika: {
     type: String,
-    enum: ['nesmesten', 'smesten'],
-    default: 'nesmesten',
+    enum: ["nesmesten", "smesten"],
+    default: "nesmesten",
   },
   oznacen: {
     type: Boolean,
@@ -101,6 +101,6 @@ const prijavaShema = new mongoose.Schema({
   napomena: {
     type: String,
   },
-})
+});
 
-module.exports = mongoose.model('applications', prijavaShema)
+module.exports = mongoose.model("applications", prijavaShema);
