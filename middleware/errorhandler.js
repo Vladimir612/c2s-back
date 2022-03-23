@@ -14,6 +14,7 @@ const errorHandler = (err, req, res, next) => {
       statusCode = 400
     }
     if (err.code && err.code === 11000) {
+      console.log(err)
       message = `Duplikat za polje: ${Object.keys(err.keyValue)}`
       statusCode = 400
     }

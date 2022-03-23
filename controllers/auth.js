@@ -22,7 +22,7 @@ const login = async (req, res, next) => {
     email: result.email,
   }
   const token = jwt.sign(user, process.env.TOKEN_SECRET, {
-    expiresIn: 100,
+    expiresIn: 10000,
   })
 
   res.json({ success: true, user, token })

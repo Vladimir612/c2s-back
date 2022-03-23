@@ -1,18 +1,30 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
+
+const pitanje = {
+  odgovor: {
+    type: String,
+    required: true,
+  },
+  ocena: {
+    type: Number,
+    min: 1,
+    max: 10,
+  },
+}
 const prijavaShema = new mongoose.Schema({
   imePrezime: {
     type: String,
-    required: [true, "Morate uneti ime i prezime"],
-    unique: true,
+    required: [true, 'Morate uneti ime i prezime'],
   },
   emailPriv: {
     type: String,
-    required: [true, "Morate uneti pravi email"],
+    required: [true, 'Morate uneti pravi email'],
     unique: true,
   },
   emailFon: {
     type: String,
     unique: true,
+    sparse: true,
   },
   github: {
     type: String,
@@ -35,37 +47,21 @@ const prijavaShema = new mongoose.Schema({
         type: String,
       },
     },
-    required: [true, "Zelje su obavezno polje"],
+    required: [true, 'Zelje su obavezno polje'],
   },
-  pitanja: [
-    {
-      type: {
-        nazivPitanja: {
-          type: String,
-          required: true,
-        },
-        odgovor: {
-          type: String,
-          required: true,
-        },
-        ocena: {
-          type: Number,
-          min: 1,
-          max: 10,
-          default: 0,
-        },
-      },
-    },
-  ],
+  pitanja: {
+    pitanje1: pitanje,
+    pitanje2: pitanje,
+  },
   statusHR: {
     type: String,
-    enum: ["neocenjen", "ocenjen", "finalno"],
-    default: "neocenjen",
+    enum: ['neocenjen', 'ocenjen', 'finalno'],
+    default: 'neocenjen',
   },
   statusLogistika: {
     type: String,
-    enum: ["nesmesten", "smesten"],
-    default: "nesmesten",
+    enum: ['nesmesten', 'smesten'],
+    default: 'nesmesten',
   },
   oznacen: {
     type: Boolean,
@@ -109,6 +105,6 @@ const prijavaShema = new mongoose.Schema({
   napomena: {
     type: String,
   },
-});
+})
 
-module.exports = mongoose.model("applications", prijavaShema);
+module.exports = mongoose.model('applications', prijavaShema)
