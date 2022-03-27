@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 require('express-async-errors')
 require('dotenv/config')
+require('dotenv').config()
 
 //routers
 const prijaveRouter = require('./routes/prijave')

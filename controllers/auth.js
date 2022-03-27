@@ -21,6 +21,7 @@ const login = async (req, res, next) => {
     userId: result._id,
     email: result.email,
   }
+
   const token = jwt.sign(user, process.env.TOKEN_SECRET, {
     expiresIn: 10000,
   })

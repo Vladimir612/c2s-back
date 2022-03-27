@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+// objekti za semu
 const pitanje = {
   odgovor: {
     type: String,
@@ -7,104 +7,144 @@ const pitanje = {
   },
   ocena: {
     type: Number,
-    min: 1,
+    min: 0,
     max: 10,
+    default: 0,
   },
 }
-const prijavaShema = new mongoose.Schema({
-  imePrezime: {
-    type: String,
-    required: [true, 'Morate uneti ime i prezime'],
+// za CV
+const kompanijeOcene = {
+  rajf: {
+    type: Number,
+    //default: 0,
   },
-  emailPriv: {
-    type: String,
-    required: [true, 'Morate uneti pravi email'],
-    unique: true,
+  adacta: {
+    type: Number,
+    //default: 0,
   },
-  emailFon: {
-    type: String,
-    unique: true,
-    sparse: true,
+  prime: {
+    type: Number,
+    //default: 0,
   },
-  github: {
-    type: String,
+  semos: {
+    type: Number,
+    //default: 0,
   },
-  linkedin: {
-    type: String,
-  },
-  zelje: {
-    type: {
-      panel: {
-        type: Boolean,
-      },
-      techChallenge: {
-        type: Boolean,
-      },
-      speedDating: {
-        type: String,
-      },
-      radionica: {
-        type: String,
-      },
-    },
-    required: [true, 'Zelje su obavezno polje'],
-  },
-  pitanja: {
-    pitanje1: pitanje,
-    pitanje2: pitanje,
-  },
-  statusHR: {
-    type: String,
-    enum: ['neocenjen', 'ocenjen', 'finalno'],
-    default: 'neocenjen',
-  },
-  statusLogistika: {
-    type: String,
-    enum: ['nesmesten', 'smesten'],
-    default: 'nesmesten',
-  },
-  oznacen: {
+}
+
+//zelje i info logistika
+const stavkeZelja = {
+  panel: {
     type: Boolean,
     default: false,
   },
-  infoZaLogistiku: {
-    type: {
-      panel: {
-        type: Boolean,
-      },
-      techChallenge: {
-        type: Boolean,
-      },
-      speedDating: {
-        type: String,
-      },
-      radionica: {
-        type: String,
-      },
-    },
+  techChallenge: {
+    type: Boolean,
+    default: false,
   },
-  izmeniliLog: [
+  speedDating: [
     {
-      type: mongoose.Types.ObjectId,
-      ref: 'admins',
+      type: String,
+      enum: ['rajf', 'adacta', 'semos'],
     },
-    /* {
+  ],
+  radionice: [
+    {
+      type: String,
+      enum: [
+        'dotnet',
+        'react',
+        'svelte',
+        'docker',
+        'microservices',
+        'mongodb',
+        'windows7',
+      ],
+    },
+  ],
+}
+
+const prijavaShema = new mongoose.Schema(
+  {
+    imePrezime: {
+      type: String,
+      required: [true, 'Morate uneti ime i prezime'],
+    },
+    emailPriv: {
+      type: String,
+      required: [true, 'Morate uneti pravi email'],
+      unique: true,
+    },
+    emailFon: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    zelje: {
+      type: stavkeZelja,
+      required: [true, 'Zelje su obavezno polje'],
+    },
+    cvOcene: {
       type: {
-        mail: {
-          type: String,
+        speedDating: {
+          type: kompanijeOcene,
+          default: {},
+        },
+        radionice: {
+          type: kompanijeOcene,
+          default: {},
         },
       },
-    }, */
-  ],
-  izmeniliHr: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: 'admins',
+      default: {},
     },
-  ],
-  napomena: {
-    type: String,
+    pitanja: {
+      pitanje1: pitanje,
+      pitanje2: pitanje,
+    },
+    statusHR: {
+      type: String,
+      enum: ['neocenjen', 'ocenjen', 'finalno'],
+      default: 'neocenjen',
+    },
+    statusLogistika: {
+      type: String,
+      enum: ['nesmesten', 'smesten'],
+      default: 'nesmesten',
+    },
+    oznacen: {
+      type: Boolean,
+      default: false,
+    },
+    infoZaLogistiku: {
+      type: stavkeZelja,
+      default: {},
+    },
+    izmeniliLog: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'admins',
+      },
+    ],
+    izmeniliHr: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'admins',
+      },
+    ],
+    izmeniliKompanija: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'admins',
+      },
+    ],
+    napomena: {
+      type: String,
+      default: '',
+    },
   },
-})
+  {
+    minimize: false,
+  }
+)
 
 module.exports = mongoose.model('applications', prijavaShema)

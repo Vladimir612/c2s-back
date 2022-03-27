@@ -15,7 +15,7 @@ const authUser = async (req, res, next) => {
     /* if (!token) {
     throw new CustomError('Unauthorized', 401)
   } */
-    console.log(result)
+
     req.user = result
 
     next()
