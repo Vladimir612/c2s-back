@@ -8,7 +8,7 @@ const logHR = async (prijavaId, userId) => {
     },
     {
       $push: {
-        Izmenio: mongoose.Types.ObjectId(prijavaId),
+        izmenio: mongoose.Types.ObjectId(prijavaId),
       },
     },
     {

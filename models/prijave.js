@@ -115,6 +115,7 @@ const prijavaShema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    //radionica da bude samo jedna za logistiku
     infoZaLogistiku: {
       type: stavkeZelja,
       default: {},

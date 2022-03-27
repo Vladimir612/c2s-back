@@ -10,7 +10,7 @@ const login = async (req, res, next) => {
     throw new CustomError('Morate uneti sifru', 401)
   }
 
-  const result = await Admin.findOne({ email })
+  const result = await Admin.findOne({ email }).populate('izmenio')
   if (!result) {
     throw new CustomError('Ne postoji user sa ovim emailom', 401)
   }
@@ -20,9 +20,17 @@ const login = async (req, res, next) => {
   const user = {
     userId: result._id,
     email: result.email,
+    dozvola: result.dozvola,
+    uloga: result.uloga,
+    koordinator: result.koordinator,
+    izmenio: result.izmenio,
+  }
+  const payload = {
+    userId: result._id,
+    email: result.email,
   }
 
-  const token = jwt.sign(user, process.env.TOKEN_SECRET, {
+  const token = jwt.sign(payload, process.env.TOKEN_SECRET, {
     expiresIn: 10000,
   })
 
