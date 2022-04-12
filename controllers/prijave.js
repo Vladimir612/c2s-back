@@ -1,4 +1,4 @@
-const Prijave = require("../models/prijave");
+const Prijava = require("../models/prijave");
 const Admin = require("../models/admin");
 const mongoose = require("mongoose");
 
@@ -290,12 +290,24 @@ const getPrijave = async (req, res, next) => {
 
   res.json({ success: true, data: result });
 };
+
 const postPrijava = async (req, res, next) => {
-  const session = await Prijave.startSession();
+  const session = await Prijava.startSession();
   session.startTransaction();
 
+  const prijava = new Prijava({
+    imePrezime: req.body.imePrezime,
+    emailPriv: req.body.emailPriv,
+    newsletter: req.body.newsletter,
+    brojTelefona: req.body.brojTelefona,
+    linkCv: req.body.linkCv,
+    fakultet: req.body.fakultet,
+    godinaStudija: req.body.godinaStudija,
+    zelja: req.body.zelja,
+  });
+
   try {
-    const prijava = req.body.prijava;
+    const sacuvanaPrijava = await prijava.save();
     if (!prijava) throw new CustomError("Niste naveli prijavu", 400);
 
     if (prijava.zelja.techChallenge.length > 3)
@@ -309,10 +321,10 @@ const postPrijava = async (req, res, next) => {
         400
       );
 
-    await Prijave.create([prijava], { session: session });
+    // await Prijave.create(prijava);
 
     const porukica = {
-      to: req.body.prijava.emailPriv,
+      to: req.body.emailPriv,
       from: "milansrdic2000@gmail.com",
       subject: "Svaka cast",
       text: "Uspeo si da popunis C2s prijavu, bravo",
@@ -324,11 +336,11 @@ const postPrijava = async (req, res, next) => {
 
     await session.commitTransaction();
     session.endSession();
-    res.json({ success: true });
+    res.json({ success: true, result: sacuvanaPrijava });
   } catch (e) {
     await session.abortTransaction();
     session.endSession();
-    res.json({ success: false });
+    res.json({ success: false, msg: e.message });
   }
 };
 module.exports = {

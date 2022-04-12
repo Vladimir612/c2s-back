@@ -17,31 +17,29 @@ const stavkeZelja = {
     },
     default: {},
   },
-  techChallenge: [
-    {
-      fonMejl: {
-        type: String,
-        unique: true,
-        default: "",
-      },
-      prethodnoIskustvo: {
-        type: String,
-        default: "",
-      },
-      tehnologije: {
-        type: String,
-        default: "",
-      },
-      saKim: {
-        type: String,
-        default: "",
-      },
-      kompanija: {
-        type: String,
-        default: "",
-      },
+  techChallenge: {
+    emailFon: {
+      type: String,
+
+      default: "",
     },
-  ],
+    prethodnoIskustvo: {
+      type: String,
+      default: "",
+    },
+    tehnologije: {
+      type: String,
+      default: "",
+    },
+    saKim: {
+      type: String,
+      default: "",
+    },
+    kompanija: {
+      type: String,
+      default: "",
+    },
+  },
   radionice: [
     {
       type: {
@@ -67,19 +65,19 @@ const stavkeZelja = {
 const infoZaLogistiku = {
   radionica: {
     type: String,
-    required: true,
+    default: "",
   },
   panel: {
     type: Boolean,
-    required: true,
+    default: false,
   },
   techChallenge: {
     type: String,
-    required: true,
+    default: "",
   },
   speedDating: {
     type: String,
-    required: true,
+    default: "",
   },
 };
 
@@ -92,7 +90,6 @@ const prijavaShema = new mongoose.Schema(
     emailPriv: {
       type: String,
       required: [true, "Morate uneti pravi email"],
-      unique: true,
     },
     newsletter: {
       type: Boolean,
@@ -102,7 +99,7 @@ const prijavaShema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    linkCV: {
+    linkCv: {
       type: String,
       required: true,
     },
