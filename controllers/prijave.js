@@ -286,7 +286,7 @@ const oceniPrijavu = async (req, res, next) => {
   }
 };
 const getPrijave = async (req, res, next) => {
-  const result = await Prijave.find({});
+  const result = await Prijave.find();
 
   res.json({ success: true, data: result });
 };
@@ -295,52 +295,53 @@ const postPrijava = async (req, res, next) => {
   const session = await Prijava.startSession();
   session.startTransaction();
 
-  const prijava = new Prijava({
-    imePrezime: req.body.imePrezime,
-    emailPriv: req.body.emailPriv,
-    newsletter: req.body.newsletter,
-    brojTelefona: req.body.brojTelefona,
-    linkCv: req.body.linkCv,
-    fakultet: req.body.fakultet,
-    godinaStudija: req.body.godinaStudija,
-    zelja: req.body.zelja,
-  });
+  const prijava = req.body.prijava;
 
   try {
-    const sacuvanaPrijava = await prijava.save();
     if (!prijava) throw new CustomError("Niste naveli prijavu", 400);
 
-    if (prijava.zelja.techChallenge.length > 3)
+    if (
+      prijava.zelja.techChallenge &&
+      prijava.zelja.techChallenge.kompanije.length > 3
+    )
       throw new CustomError(
         "Ne mozete se prijaviti na vise od 3 tech challenga",
         400
       );
-    if (prijava.zelja.radionice.length > 3)
+    if (prijava.zelja.radionice && prijava.zelja.radionice.length > 3)
       throw new CustomError(
         "Ne mozete se prijaviti na vise od 3 radionice",
         400
       );
 
-    // await Prijave.create(prijava);
+    const svePrijave = await Prijava.find();
+
+    prijava.prijavaId = svePrijave.length + 1;
+
+    if (!prijava.zelja.panel) {
+      prijava.statusHR = "ocenjen";
+    }
+
+    await Prijava.create(prijava);
 
     const porukica = {
-      to: req.body.emailPriv,
+      to: prijava.emailPriv,
       from: "milansrdic2000@gmail.com",
-      subject: "Svaka cast",
-      text: "Uspeo si da popunis C2s prijavu, bravo",
-      html: "<strong color='red'>Vi bor der, unnskyld</strong>",
+      subject: "[C2S - Kompanije studentima], prijava",
+      text: "Prijavili ste se uspešno za projekat",
+      html: "<div><h3>Uspešno ste se prijavili za projekat Kompanije Studentima</h3><p>Kada se prijave budu zatvorile sačekajte naš mejl odobrenja. Pozrav!</p></div>",
     };
 
     await sgMail.send(porukica);
     console.log("mejl je poslat");
 
     await session.commitTransaction();
+    res.json({ success: true, result: prijava });
     session.endSession();
-    res.json({ success: true, result: sacuvanaPrijava });
   } catch (e) {
     await session.abortTransaction();
-    session.endSession();
     res.json({ success: false, msg: e.message });
+    session.endSession();
   }
 };
 module.exports = {

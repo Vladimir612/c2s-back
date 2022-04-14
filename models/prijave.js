@@ -20,7 +20,6 @@ const stavkeZelja = {
   techChallenge: {
     emailFon: {
       type: String,
-
       default: "",
     },
     prethodnoIskustvo: {
@@ -35,10 +34,12 @@ const stavkeZelja = {
       type: String,
       default: "",
     },
-    kompanija: {
-      type: String,
-      default: "",
-    },
+    kompanije: [
+      {
+        type: String,
+        enum: ["raiffeisen", "adacta", "semos", "eyesee", "prime", "a1"],
+      },
+    ],
   },
   radionice: [
     {
