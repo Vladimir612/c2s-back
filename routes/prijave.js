@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   getPrijave,
   postPrijava,
-  //oceniPrijavu,
+  oceniPrijavu,
   smestiUFinalno,
   vratiUOcenjeno,
   staviUSmestene,
@@ -17,7 +17,7 @@ const {
 const { authUser } = require("../middleware/auth");
 router.route("/").get(authUser, getPrijave).post(postPrijava);
 
-// router.route('/oceni').patch(authUser, oceniPrijavu)
+router.route("/oceni").patch(authUser, oceniPrijavu);
 
 router.route("/hr/ufinalno").patch(authUser, smestiUFinalno);
 
