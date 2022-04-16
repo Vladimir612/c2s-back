@@ -185,106 +185,106 @@ const smestiUFinalno = async (req, res, next) => {
     next(e);
   }
 };
-const oceniPrijavu = async (req, res, next) => {
-  const ocene = req.body.ocene;
-  const prijava_id = req.body.prijava_id;
-  const cvOcene = req.body.cvOcene;
+// const oceniPrijavu = async (req, res, next) => {
+//   const ocene = req.body.ocene;
+//   const prijava_id = req.body.prijava_id;
+//   const cvOcene = req.body.cvOcene;
 
-  if (!prijava_id) throw new CustomError("Niste uneli prijavu", 400);
+//   if (!prijava_id) throw new CustomError("Niste uneli prijavu", 400);
 
-  const prijavaCv = await Prijave.findOne({
-    _id: mongoose.Types.ObjectId(prijava_id),
-  });
-  if (!prijavaCv) throw new CustomError("Nema ove prijave", 400);
-  //ocene ce biti objekat , ime propertija je naziv pitanja, value je
-  // ocena koja se unosi
-  let oceneZaBazu = {};
+//   const prijavaCv = await Prijave.findOne({
+//     _id: mongoose.Types.ObjectId(prijava_id),
+//   });
+//   if (!prijavaCv) throw new CustomError("Nema ove prijave", 400);
+//   //ocene ce biti objekat , ime propertija je naziv pitanja, value je
+//   // ocena koja se unosi
+//   let oceneZaBazu = {};
 
-  //ocene za pitanja
-  if (ocene) {
-    if (Object.keys(ocene).length == 0) {
-      throw new CustomError("Niste uneli nijednu ocenu", 400);
-    }
-    for (let prop in ocene) {
-      if (!Object.keys(prijavaCv.pitanja).includes(prop))
-        throw new CustomError(
-          "Uneli ste ocenu za pitanje koje ne postoji: " + prop
-        );
-      oceneZaBazu[`pitanja.${prop}.ocena`] = ocene[prop];
-    }
-  }
-  if (cvOcene) {
-    //ako smo uneli ocene za speedDating
-    if (cvOcene.speedDating) {
-      for (let prop in cvOcene.speedDating) {
-        //da li kompanija postoji uopste?
-        if (!Kompanije.includes(prop))
-          throw new CustomError("Kompanija koju ste uneli ne postoji: " + prop);
-        //ocenjujemo samo ono sto ima u zeljama
-        if (prijavaCv.zelje.speedDating.includes(prop)) {
-          oceneZaBazu[`cvOcene.speedDating.${prop}`] =
-            cvOcene.speedDating[prop];
-        } else {
-          throw new CustomError(
-            "Korisnik se nije prijavio za speedDating kod kompanije: " + prop,
-            400
-          );
-        }
-      }
-    }
-    //ako smo uneli radionice
-    if (cvOcene.radionice) {
-      for (let prop in cvOcene.radionice) {
-        if (proveriRadionicaKompanija(prijavaCv, prop)) {
-          oceneZaBazu[`cvOcene.radionice.${prop}`] = cvOcene.radionice[prop];
-        } else {
-          throw new CustomError(
-            "Korisnik se nije prijavio za radionicu navedene kompanije: " + prop
-          );
-        }
-      }
-    }
-  }
+//   //ocene za pitanja
+//   if (ocene) {
+//     if (Object.keys(ocene).length == 0) {
+//       throw new CustomError("Niste uneli nijednu ocenu", 400);
+//     }
+//     for (let prop in ocene) {
+//       if (!Object.keys(prijavaCv.pitanja).includes(prop))
+//         throw new CustomError(
+//           "Uneli ste ocenu za pitanje koje ne postoji: " + prop
+//         );
+//       oceneZaBazu[`pitanja.${prop}.ocena`] = ocene[prop];
+//     }
+//   }
+//   if (cvOcene) {
+//     //ako smo uneli ocene za speedDating
+//     if (cvOcene.speedDating) {
+//       for (let prop in cvOcene.speedDating) {
+//         //da li kompanija postoji uopste?
+//         if (!Kompanije.includes(prop))
+//           throw new CustomError("Kompanija koju ste uneli ne postoji: " + prop);
+//         //ocenjujemo samo ono sto ima u zeljama
+//         if (prijavaCv.zelje.speedDating.includes(prop)) {
+//           oceneZaBazu[`cvOcene.speedDating.${prop}`] =
+//             cvOcene.speedDating[prop];
+//         } else {
+//           throw new CustomError(
+//             "Korisnik se nije prijavio za speedDating kod kompanije: " + prop,
+//             400
+//           );
+//         }
+//       }
+//     }
+//     //ako smo uneli radionice
+//     if (cvOcene.radionice) {
+//       for (let prop in cvOcene.radionice) {
+//         if (proveriRadionicaKompanija(prijavaCv, prop)) {
+//           oceneZaBazu[`cvOcene.radionice.${prop}`] = cvOcene.radionice[prop];
+//         } else {
+//           throw new CustomError(
+//             "Korisnik se nije prijavio za radionicu navedene kompanije: " + prop
+//           );
+//         }
+//       }
+//     }
+//   }
 
-  oceneZaBazu["statusHR"] = "ocenjen";
+//   oceneZaBazu["statusHR"] = "ocenjen";
 
-  console.log(oceneZaBazu);
+//   console.log(oceneZaBazu);
 
-  const session = await Prijave.startSession();
-  session.startTransaction();
+//   const session = await Prijave.startSession();
+//   session.startTransaction();
 
-  try {
-    const result = await Prijave.findOneAndUpdate(
-      {
-        _id: mongoose.Types.ObjectId(prijava_id),
-      },
-      {
-        $set: oceneZaBazu,
-        $push: {
-          izmeniliHr: mongoose.Types.ObjectId(req.user.userId),
-        },
-      },
-      {
-        runValidators: true,
-        session: session,
-        new: true,
-      }
-    );
-    if (!result) throw new CustomError("Nema ove prijave", 400);
+//   try {
+//     const result = await Prijave.findOneAndUpdate(
+//       {
+//         _id: mongoose.Types.ObjectId(prijava_id),
+//       },
+//       {
+//         $set: oceneZaBazu,
+//         $push: {
+//           izmeniliHr: mongoose.Types.ObjectId(req.user.userId),
+//         },
+//       },
+//       {
+//         runValidators: true,
+//         session: session,
+//         new: true,
+//       }
+//     );
+//     if (!result) throw new CustomError("Nema ove prijave", 400);
 
-    if (!req.user)
-      throw new CustomError("Greska prilikom autentifikacije", 401);
+//     if (!req.user)
+//       throw new CustomError("Greska prilikom autentifikacije", 401);
 
-    await logHR(result._id, req.user.userId);
-    await session.commitTransaction();
-    session.endSession();
-    res.json({ success: true, data: result });
-  } catch (e) {
-    await session.abortTransaction();
-    session.endSession();
-    throw new CustomError(e.message, 400);
-  }
-};
+//     await logHR(result._id, req.user.userId);
+//     await session.commitTransaction();
+//     session.endSession();
+//     res.json({ success: true, data: result });
+//   } catch (e) {
+//     await session.abortTransaction();
+//     session.endSession();
+//     throw new CustomError(e.message, 400);
+//   }
+// };
 const getPrijave = async (req, res, next) => {
   const result = await Prijave.find();
 
