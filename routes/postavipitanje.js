@@ -32,6 +32,7 @@ const sendEmail = (to, subject, text) => {
     });
 };
 
+//komentar
 const router = express.Router();
 router.post("/", (req, res) => {
     try {
