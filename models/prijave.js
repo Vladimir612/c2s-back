@@ -37,28 +37,22 @@ const stavkeZelja = {
     kompanije: [
       {
         type: String,
-        enum: ["raiffeisen", "adacta", "semos", "eyesee", "prime", "a1"],
       },
     ],
   },
-  radionice: [
-    {
-      type: {
-        naziv: {
-          type: String,
-          default: "",
-        },
-        motivaciono: {
-          type: String,
-          default: "",
-        },
+  radionice: {
+    sveRadionice: [
+      {
+        type: String,
       },
+    ],
+    motivaciono: {
+      type: String,
     },
-  ],
+  },
   speedDating: [
     {
       type: String,
-      enum: ["raiffeisen", "adacta", "semos", "eyesee", "prime", "a1"],
     },
   ],
 };
