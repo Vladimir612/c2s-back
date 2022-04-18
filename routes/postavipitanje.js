@@ -33,11 +33,6 @@ const sendEmail = (to, subject, text) => {
 };
 
 const router = express.Router();
-router.use(
-    cors({
-        origin: "*",
-    })
-);
 router.post("/", (req, res) => {
     try {
         sendEmail(
