@@ -1,22 +1,21 @@
-const mongoose = require('mongoose')
-const Admin = require('../models/admin')
+const mongoose = require("mongoose");
+const Admin = require("../models/admin");
 
 const logHR = async (prijavaId, userId) => {
+  console.log(userId + " User Id");
+
   await Admin.updateOne(
     {
-      _id: mongoose.Types.ObjectId(userId),
+      _id: userId,
     },
     {
       $push: {
-        izmenio: mongoose.Types.ObjectId(prijavaId),
+        izmenio: prijavaId,
       },
-    },
-    {
-      runValidators: true,
     }
-  )
-}
+  );
+};
 
 module.exports = {
   logHR,
-}
+};
