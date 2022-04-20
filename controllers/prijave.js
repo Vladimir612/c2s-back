@@ -260,10 +260,10 @@ const postPrijava = async (req, res, next) => {
 
     const porukica = {
       to: prijava.emailPriv,
-      from: "milansrdic2000@gmail.com",
-      subject: "[C2S - Kompanije studentima], prijava",
-      text: "Prijavili ste se uspešno za projekat",
-      html: "<div><h3>Uspešno ste se prijavili za projekat Kompanije Studentima</h3><p>Kada se prijave budu zatvorile sačekajte naš mejl odobrenja. Pozrav!</p></div>",
+      from: "vladimir.lazarevic@fonis.rs",
+      subject: "[Kompanije studentima][FONIS] Prihvaćena prijava",
+      text: "Sa zadovoljstvom Vam javljamo da je vaša prijava uspešno evidentirana!",
+      html: "<div><h3>Sa zadovoljstvom Vam javljamo da je vaša prijava uspešno evidentirana!</h3><p>Možeš očekivati povratnu informaciju nakon zatvaranja prijava.</p></div>",
     };
 
     await sgMail.send(porukica);
