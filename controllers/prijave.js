@@ -260,7 +260,7 @@ const postPrijava = async (req, res, next) => {
 
     const porukica = {
       to: prijava.emailPriv,
-      from: "vladimir.lazarevic@fonis.rs",
+      from: "milansrdic2000@gmail.com",
       subject: "[Kompanije studentima][FONIS] Prihvaćena prijava",
       text: "Sa zadovoljstvom Vam javljamo da je vaša prijava uspešno evidentirana!",
       html: "<div><h3>Sa zadovoljstvom Vam javljamo da je vaša prijava uspešno evidentirana!</h3><p>Možeš očekivati povratnu informaciju nakon zatvaranja prijava.</p></div>",
