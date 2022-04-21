@@ -28,14 +28,13 @@ const login = async (req, res, next) => {
   const payload = {
     userId: result._id,
     email: result.email,
-    dozvola: result.dozvola,
   }
 
   const token = jwt.sign(payload, process.env.TOKEN_SECRET, {
     expiresIn: 10000,
   })
 
-  res.json({ success: true, user, token })
+  res.json({ success: true, user, token, poruka: 'sta ima test' })
 }
 
 module.exports = {

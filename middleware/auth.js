@@ -1,22 +1,20 @@
-const jwt = require('jsonwebtoken')
 const CustomError = require('../errors/customerror')
+const Admin = require('../models/admin')
 
 const authUser = async (req, res, next) => {
-  const authHeader = req.headers.authorization
+  const userId = req.headers.userid
 
-  if (!authHeader || !authHeader.startsWith('Bearer'))
-    throw new CustomError('Unauthorized', 401)
-
-  const token = authHeader.split(' ')[1]
+  if (!userId) throw new CustomError('Unauthorized', 401)
 
   try {
-    const result = jwt.verify(token, process.env.TOKEN_SECRET)
+    const user = await Admin.findOne({ _id: userId })
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Ne postoji taj admin u bazi' })
+    }
 
-    /* if (!token) {
-    throw new CustomError('Unauthorized', 401)
-  } */
-
-    req.user = result
+    req.user = user
 
     next()
   } catch (e) {

@@ -1,71 +1,79 @@
 const mongoose = require('mongoose')
-// objekti za semu
-const pitanje = {
-  odgovor: {
-    type: String,
-    required: true,
-  },
-  ocena: {
-    type: Number,
-    min: 0,
-    max: 10,
-    default: 0,
-  },
-}
-// za CV
-const kompanijeOcene = {
-  rajf: {
-    type: Number,
-    max: 2,
-    min: 0,
-  },
-  adacta: {
-    type: Number,
-    max: 2,
-    min: 0,
-  },
-  prime: {
-    type: Number,
-    max: 2,
-    min: 0,
-  },
-  semos: {
-    type: Number,
-    max: 2,
-    min: 0,
-  },
-}
 
 //zelje i info logistika
 const stavkeZelja = {
+  panel: {
+    type: {
+      staBiCuli: {
+        type: String,
+        default: '',
+      },
+      ocena: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 25,
+      },
+    },
+    default: {},
+  },
+  techChallenge: {
+    emailFon: {
+      type: String,
+      default: '',
+    },
+    prethodnoIskustvo: {
+      type: String,
+      default: '',
+    },
+    tehnologije: {
+      type: String,
+      default: '',
+    },
+    saKim: {
+      type: String,
+      default: '',
+    },
+    kompanije: [
+      {
+        type: String,
+      },
+    ],
+  },
+  radionice: {
+    sveRadionice: [
+      {
+        type: String,
+      },
+    ],
+    motivaciono: {
+      type: String,
+    },
+  },
+  speedDating: [
+    {
+      type: String,
+    },
+  ],
+}
+
+const infoZaLogistiku = {
+  radionica: {
+    type: String,
+    default: '',
+  },
   panel: {
     type: Boolean,
     default: false,
   },
   techChallenge: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: '',
   },
-  speedDating: [
-    {
-      type: String,
-      enum: ['rajf', 'adacta', 'semos'],
-    },
-  ],
-  radionice: [
-    {
-      type: String,
-      enum: [
-        'dotnet',
-        'react',
-        'svelte',
-        'docker',
-        'microservices',
-        'mongodb',
-        'windows7',
-      ],
-    },
-  ],
+  speedDating: {
+    type: String,
+    default: '',
+  },
 }
 
 const prijavaShema = new mongoose.Schema(
@@ -77,33 +85,30 @@ const prijavaShema = new mongoose.Schema(
     emailPriv: {
       type: String,
       required: [true, 'Morate uneti pravi email'],
-      unique: true,
     },
-    emailFon: {
+    newsletter: {
+      type: Boolean,
+      default: false,
+    },
+    brojTelefona: {
       type: String,
-      unique: true,
-      sparse: true,
+      required: true,
     },
-    zelje: {
+    linkCv: {
+      type: String,
+      required: true,
+    },
+    fakultet: {
+      type: String,
+      required: true,
+    },
+    godinaStudija: {
+      type: String,
+      required: true,
+    },
+    zelja: {
       type: stavkeZelja,
       required: [true, 'Zelje su obavezno polje'],
-    },
-    cvOcene: {
-      type: {
-        speedDating: {
-          type: kompanijeOcene,
-          default: {},
-        },
-        radionice: {
-          type: kompanijeOcene,
-          default: {},
-        },
-      },
-      default: {},
-    },
-    pitanja: {
-      pitanje1: pitanje,
-      pitanje2: pitanje,
     },
     statusHR: {
       type: String,
@@ -119,24 +124,20 @@ const prijavaShema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    //radionica da bude samo jedna za logistiku
     infoZaLogistiku: {
-      type: stavkeZelja,
+      type: infoZaLogistiku,
       default: {},
     },
     izmeniliLog: [
       {
-        type: String,
+        type: mongoose.Types.ObjectId,
+        ref: 'admins',
       },
     ],
     izmeniliHr: [
       {
-        type: String,
-      },
-    ],
-    izmeniliKompanija: [
-      {
-        type: String,
+        type: mongoose.Types.ObjectId,
+        ref: 'admins',
       },
     ],
     napomena: {
