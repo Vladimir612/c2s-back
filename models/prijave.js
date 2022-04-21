@@ -16,19 +16,23 @@ const pitanje = {
 const kompanijeOcene = {
   rajf: {
     type: Number,
-    //default: 0,
+    max: 2,
+    min: 0,
   },
   adacta: {
     type: Number,
-    //default: 0,
+    max: 2,
+    min: 0,
   },
   prime: {
     type: Number,
-    //default: 0,
+    max: 2,
+    min: 0,
   },
   semos: {
     type: Number,
-    //default: 0,
+    max: 2,
+    min: 0,
   },
 }
 
@@ -122,20 +126,17 @@ const prijavaShema = new mongoose.Schema(
     },
     izmeniliLog: [
       {
-        type: mongoose.Types.ObjectId,
-        ref: 'admins',
+        type: String,
       },
     ],
     izmeniliHr: [
       {
-        type: mongoose.Types.ObjectId,
-        ref: 'admins',
+        type: String,
       },
     ],
     izmeniliKompanija: [
       {
-        type: mongoose.Types.ObjectId,
-        ref: 'admins',
+        type: String,
       },
     ],
     napomena: {

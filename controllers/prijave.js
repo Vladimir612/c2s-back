@@ -9,7 +9,7 @@ const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 // ovo treba da se doda na sve funkcije gde hocemo da logujemo
-const { logHR } = require('./log')
+const { logAdmin, logHr } = require('./log')
 const { proveriRadionicaKompanija } = require('./radionice')
 const Kompanije = ['rajf', 'adacta', 'semos']
 
@@ -120,7 +120,7 @@ const vratiUOcenjeno = async (req, res, next) => {
       }
     )
 
-    await logHR(prijava_id, req.user.userId)
+    await logAdmin(prijava_id, req.user.userId)
     await session.commitTransaction()
     session.endSession()
     res.json({ success: true })
@@ -170,7 +170,7 @@ const smestiUFinalno = async (req, res, next) => {
       }
     )
 
-    await logHR(prijava_id, req.user.userId)
+    await logAdmin(prijava_id, req.user.userId)
 
     await session.commitTransaction()
     session.endSession()
@@ -244,8 +244,17 @@ const oceniPrijavu = async (req, res, next) => {
 
   oceneZaBazu['statusHR'] = 'ocenjen'
 
-  console.log(oceneZaBazu)
-
+  let logovi = {}
+  if (req.user.dozvola === 2) {
+    logovi['izmeniliHr'] = req.user.email
+  }
+  if (req.user.dozvola === 3) {
+    logovi['izmeniliLog'] = req.user.email
+  }
+  if (req.user.dozvola === 4) {
+    logovi['izmeniliKompanija'] = req.user.email
+  }
+  console.log(logovi)
   const session = await Prijave.startSession()
   session.startTransaction()
 
@@ -256,9 +265,7 @@ const oceniPrijavu = async (req, res, next) => {
       },
       {
         $set: oceneZaBazu,
-        $push: {
-          izmeniliHr: mongoose.Types.ObjectId(req.user.userId),
-        },
+        $addToSet: logovi,
       },
       {
         runValidators: true,
@@ -270,7 +277,8 @@ const oceniPrijavu = async (req, res, next) => {
 
     if (!req.user) throw new CustomError('Greska prilikom autentifikacije', 401)
 
-    await logHR(result._id, req.user.userId)
+    //await logHr(result._id, req.user.userId, session)
+    await logAdmin(result._id, req.user.userId)
     await session.commitTransaction()
     session.endSession()
     res.json({ success: true, data: result })

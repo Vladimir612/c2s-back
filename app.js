@@ -9,6 +9,7 @@ require('dotenv').config()
 //routers
 const prijaveRouter = require('./routes/prijave')
 const loginRouter = require('./routes/auth')
+const adminRouter = require('./routes/admin')
 
 //middleware
 const errorHandler = require('./middleware/errorhandler')
@@ -21,6 +22,7 @@ app.use(cors())
 
 app.use('/api/auth', loginRouter)
 app.use('/api/prijave', prijaveRouter)
+app.use('/api/admin/', adminRouter)
 app.get('/', (req, res) => {
   res.send('C2S')
 })

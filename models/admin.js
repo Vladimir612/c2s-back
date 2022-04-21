@@ -20,6 +20,7 @@ const AdminSchema = new mongoose.Schema({
   },
   dozvola: {
     type: Number,
+    required: true,
   },
   koordinator: {
     type: Boolean,
@@ -30,7 +31,6 @@ const AdminSchema = new mongoose.Schema({
     {
       type: mongoose.Types.ObjectId,
       ref: 'applications',
-      unique: true,
     },
   ],
 })

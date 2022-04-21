@@ -28,6 +28,7 @@ const login = async (req, res, next) => {
   const payload = {
     userId: result._id,
     email: result.email,
+    dozvola: result.dozvola,
   }
 
   const token = jwt.sign(payload, process.env.TOKEN_SECRET, {
