@@ -1,17 +1,13 @@
 const Prijava = require("../models/prijave");
-const Admin = require("../models/admin");
 const mongoose = require("mongoose");
 
 const CustomError = require("../errors/customerror");
 
 const sgMail = require("@sendgrid/mail");
-
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // ovo treba da se doda na sve funkcije gde hocemo da logujemo
 const { logHR } = require("./log");
-const { proveriRadionicaKompanija } = require("./radionice");
-const Kompanije = ["rajf", "adacta", "semos"];
 
 const obrisiPrijave = async (req, res) => {
   await Prijava.deleteMany({});
@@ -56,6 +52,7 @@ const infoZaLogistiku = async (req, res, next) => {
   }
   res.json({ success: true });
 };
+
 const dodajNapomenu = async (req, res, next) => {
   const napomenica = req.body.napomena;
   if (!napomenica) throw new CustomError("Niste naveli napomenu", 400);
@@ -63,7 +60,7 @@ const dodajNapomenu = async (req, res, next) => {
   const prijava_id = req.body.prijava_id;
   if (!prijava_id) throw new CustomError("Niste naveli prijava_id!", 400);
 
-  const result = await Prijava.updateOne({ _id: prijava_id }, [
+  await Prijava.updateOne({ _id: prijava_id }, [
     {
       $set: {
         napomena: {
@@ -75,7 +72,8 @@ const dodajNapomenu = async (req, res, next) => {
   //bez nadovezivanja
   res.json({ success: true });
 };
-const oznaci = async (req, res, next) => {
+
+const oznaci = async (req, res) => {
   const prijava_id = req.body.prijava_id;
   if (!prijava_id) throw new CustomError("Niste naveli prijava_id!", 400);
 
@@ -85,7 +83,8 @@ const oznaci = async (req, res, next) => {
   await Prijava.updateOne({ _id: prijava_id }, { oznacen: !result.oznacen });
   res.json({ success: true });
 };
-const vratiUNesmestene = async (req, res, next) => {
+
+const vratiUNesmestene = async (req, res) => {
   const prijava_id = req.body.prijava_id;
   if (!prijava_id) throw new CustomError("Niste naveli prijava_id!", 400);
 
@@ -101,6 +100,7 @@ const vratiUNesmestene = async (req, res, next) => {
   );
   res.json({ success: true });
 };
+
 const staviUSmestene = async (req, res, next) => {
   const prijava_id = req.body.prijava_id;
   if (!prijava_id) throw new CustomError("Niste naveli prijava_id!", 400);
@@ -108,7 +108,6 @@ const staviUSmestene = async (req, res, next) => {
   const result = await Prijava.findOne({ _id: prijava_id });
   if (!result) throw new CustomError("Navedena prijava ne postoji!", 400);
 
-  console.log(result.statusLogistika);
   if (result.statusLogistika === "smesten")
     throw new CustomError("Prijava je vec smestena", 400);
 
@@ -118,6 +117,7 @@ const staviUSmestene = async (req, res, next) => {
   await Prijava.updateOne({ _id: prijava_id }, { statusLogistika: "smesten" });
   res.json({ success: true });
 };
+
 const vratiUOcenjeno = async (req, res, next) => {
   const prijava_id = req.body.prijava_id;
   if (!prijava_id) throw new CustomError("Niste naveli prijava_id!", 400);
@@ -130,6 +130,7 @@ const vratiUOcenjeno = async (req, res, next) => {
 
   const session = await Prijava.startSession();
   await session.startTransaction();
+
   try {
     await Prijava.updateOne(
       { _id: prijava_id },
@@ -160,36 +161,22 @@ const smestiUFinalno = async (req, res, next) => {
   const result = await Prijava.findOne({
     _id: mongoose.Types.ObjectId(prijava_id),
   });
+
   if (!result) throw new CustomError("Navedena prijava ne postoji!", 400);
-
-  /* const { pitanje1, pitanje2 } = result.pitanja
-  if (!pitanje1.ocena) throw new CustomError('Pitanje 1 nema ocenu!', 400)
-  if (!pitanje2.ocena) throw new CustomError('Pitanje 2 nema ocenu!', 400) */
-
-  /*  if (result.statusHR === 'neocenjen')
-    throw new CustomError(
-      'Ne mozete smestiti u finalno neocenjenu prijavu',
-      400
-    ) */
-
-  /* if (result.statusHR === 'finalno') {
-    throw new CustomError('Prijava je vec finalna!', 400)
-  } */
 
   const infoZaLogistiku = result.infoZaLogistiku;
 
   if (!infoZaLogistiku)
     throw new CustomError("Prijava nema info za logistiku!", 400);
 
-  if (infoZaLogistiku.radionica == "") {
+  if (infoZaLogistiku.radionica == "")
     throw new CustomError("Popunite radionicu u info za logistiku");
-  }
-  if (infoZaLogistiku.techChallenge == "") {
+
+  if (infoZaLogistiku.techChallenge == "")
     throw new CustomError("Popunite tech celindz u info za logistiku");
-  }
-  if (infoZaLogistiku.speedDating == "") {
+
+  if (infoZaLogistiku.speedDating == "")
     throw new CustomError("Popunite speed dating u info za logistiku");
-  }
 
   const session = await Prijava.startSession();
 
@@ -222,7 +209,7 @@ const smestiUFinalno = async (req, res, next) => {
   }
 };
 
-const oceniPrijavu = async (req, res, next) => {
+const oceniPrijavu = async (req, res) => {
   try {
     if (req.user.dozvola !== 2) {
       return res.json({
@@ -315,6 +302,7 @@ const postPrijava = async (req, res, next) => {
     session.endSession();
   }
 };
+
 module.exports = {
   getPrijave,
   postPrijava,

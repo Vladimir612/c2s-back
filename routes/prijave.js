@@ -14,6 +14,7 @@ const {
   infoZaLogistiku,
   obrisiPrijave,
 } = require("../controllers/prijave");
+
 const { authUser } = require("../middleware/auth");
 router.route("/").get(authUser, getPrijave).post(postPrijava);
 

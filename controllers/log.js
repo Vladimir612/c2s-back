@@ -1,8 +1,7 @@
-const mongoose = require('mongoose')
-const Admin = require('../models/admin')
+const Admin = require("../models/admin");
 
 const logHR = async (prijavaId, userId) => {
-  console.log(userId + ' User Id')
+  console.log(userId + " User Id");
 
   await Admin.updateOne(
     {
@@ -13,9 +12,9 @@ const logHR = async (prijavaId, userId) => {
         izmenio: prijavaId,
       },
     }
-  )
-}
+  );
+};
 
 module.exports = {
   logHR,
-}
+};
